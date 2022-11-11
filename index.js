@@ -24,4 +24,23 @@ app.post('/', (req, res) => {
 
 });
 
+app.post('/v2', async (req, res) => {
+    console.log("=====INSIDE v2 PDF POST METHOD======")
+    var result = await phantom.render2(req.body)
+    console.log(result)
+    const file = `/tmp/testo.pdf`;
+    console.log('dirname testo', file)
+    if (!file) {
+        res.status(500).send('This has failed :c ')
+    } else {
+        console.log("downloading")
+        res.status(200).sendFile(file,{
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'inline; filename="testo.pdf"'
+        })
+    }
+
+});
+
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
